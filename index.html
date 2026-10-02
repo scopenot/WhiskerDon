@@ -1,12 +1,143 @@
-<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>WhiskerDonation · управляй островом</title>
-<style>*{box-sizing:border-box}body{margin:0;background:#f4f3ee;color:#222b34;font:16px 'Segoe UI',sans-serif}main{max-width:960px;margin:auto;padding:70px 24px}small{letter-spacing:.15em;text-transform:uppercase;color:#526963}h1{font-size:clamp(34px,7vw,62px);letter-spacing:-.04em;line-height:1.08;max-width:700px;margin:18px 0}p{color:#56636a;line-height:1.6}#cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:32px 0}.card{border:1px solid #dce0d8;border-radius:22px;padding:24px;background:#fff}h2{font-size:21px;margin:0 0 12px}.price{font-size:28px;font-weight:700;color:#315e50}button,a{font:inherit;border-radius:12px;border:0;padding:12px 16px;background:#315e50;color:white;cursor:pointer;text-decoration:none;display:inline-block}button:disabled{background:#cbd2cd;cursor:default}input,select{border:1px solid #ccd4ce;padding:12px;border-radius:10px;font:inherit;width:240px}code{background:#eef2ed;padding:5px;border-radius:5px}#notice{min-height:30px;color:#315e50}footer{font-size:13px;color:#66716b}.disabled{opacity:.6}</style>
-<main><small>Whiskerwood × DonationAlerts</small><h1>Большие приключения маленьких мышей.</h1><p>Выбери эффект: команда в сообщении доната обязательна.<br>Имена и ID мышей видны в оверлее на стриме.</p><label>Кому применить? <input id="target" placeholder="#3 или @Rascal" maxlength="80"></label><p>Для имени с пробелами: <code>@"Имя мыши"</code>. Без цели — ручная привязка или случайная мышь.</p><label>Применений <select id="times"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label><p>Команда обязательна. До 3 применений за донат. Временные эффекты объединяются по длительности, новые жители прибывают группой.</p><div id="notice" role="status"></div><div id="cards"></div><footer>Суммы и команды задаёт стример. Выключенные команды отдельных ресурсов скрыты. Оплата и подтверждение происходят только на DonationAlerts.</footer></main>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Команды для стрима</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f5f9;color:#172033;font:15px 'Segoe UI',sans-serif}
+main{max-width:1120px;margin:auto;padding:40px 24px}h1{font-size:30px;letter-spacing:-.03em;margin:0 0 12px}p{color:#596579;line-height:1.6}
+.settings{display:flex;flex-wrap:wrap;gap:20px;padding:22px;background:white;border:1px solid #e0e5ed;border-radius:14px;margin-top:24px}
+label{display:flex;min-width:0;max-width:100%;flex-direction:column;gap:8px;font-weight:600}input,select{background:#fff;color:inherit;border:1px solid #cbd3df;padding:10px 12px;border-radius:8px;font:inherit}input{width:min(300px,100%)}select{min-width:110px}
+.help{font-size:13px}code{background:#e8edf5;color:#33415b;padding:3px 5px;border-radius:4px}#cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,450px),1fr));gap:18px;margin:24px 0}
+.card{display:flex;flex-direction:column;border:1px solid #e0e5ed;border-radius:14px;padding:24px;background:#fff;box-shadow:0 2px 5px #17203304}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}h2{font-size:23px;margin:0;color:#155de9;overflow-wrap:anywhere}.price{font-size:24px;font-weight:650;white-space:nowrap}.detail{font-size:13px;margin-top:0}.description{flex:1}
+.actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px}.copy-wrap{position:relative}button,a{font:600 13px 'Segoe UI',sans-serif;border-radius:8px;cursor:pointer;text-decoration:none}button{border:1px solid #155de9;background:#155de9;color:#fff;padding:11px 13px}button:hover{background:#104cc3}.donate{color:#155de9;padding:10px 0}a:hover{text-decoration:underline}:focus-visible{outline:3px solid #83afff;outline-offset:3px}
+.tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#253248;color:#fff;font-size:12px;padding:6px 9px;border-radius:6px;white-space:nowrap;pointer-events:none}.tooltip[hidden]{display:none}
+#notice{color:#354967;font-size:14px;overflow-wrap:anywhere}footer{font-size:12px;color:#6b7689;line-height:1.6}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:520px){main{padding:28px 16px}.card{padding:20px}.settings{padding:18px}h1{font-size:26px}}
+</style>
+</head>
+<body><main>
+<h1>Выбери команду для стрима</h1>
+<p>Скопируй команду и вставь её в сообщение доната. Имена и ID мышей видны в оверлее на стриме.</p>
+<div class="settings">
+<label for="target">Кому применить?<input id="target" placeholder="#3 или @Rascal" maxlength="80" aria-describedby="target-help"></label>
+<label for="times">Применений<select id="times"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
+</div>
+<p class="help" id="target-help">Для имени с пробелами: <code>@"Имя мыши"</code>. Без цели — привязанная зрителю или случайная мышь. Команды для всего острова не требуют цели.</p>
+<p class="help">До 3 применений за донат: цена умножается на выбранное число. Остаток суммы не даёт дополнительного применения. Временные эффекты объединяются по длительности. Все таймеры идут в реальных секундах: скорость игры и пауза не меняют отсчёт.</p>
+<div id="notice" role="status" aria-live="polite"></div>
+<div id="copy-status" class="sr-only" role="status" aria-live="polite"></div>
+<div id="cards"></div>
+<footer>Суммы и команды задаёт стример. На DonationAlerts укажи показанную сумму и вставь скопированную команду. Оплата и подтверждение происходят на DonationAlerts.</footer>
+</main>
 <script>
-const cards=document.querySelector('#cards'),notice=document.querySelector('#notice');let config;
-async function load(){try{const response=await fetch('./commands.json',{cache:'no-store'});if(!response.ok)throw Error();config=await response.json();cards.replaceChildren();for(const command of config.commands.filter(c=>!c.id.startsWith("resource_")||c.enabled).sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const cost=command.amount;const card=document.createElement('section');card.className='card'+(command.enabled?'':' disabled');const heading=document.createElement('h2');heading.textContent=command.title;const price=document.createElement('div');price.className='price';price.textContent=cost+' '+command.currency;const detail=document.createElement('p');detail.textContent=command.enabled?(command.command+' · цена одного применения '+command.amount+' '+command.currency+(command.duration?' · '+command.duration+' с':'')):'Пока недоступно';const description=document.createElement('p');description.textContent=command.reason||'';const button=document.createElement('button');button.textContent='Скопировать команду';button.disabled=!command.enabled;button.onclick=async()=>{const target=document.querySelector('#target').value.trim();const total=cost*Number(document.querySelector("#times").value);const message=command.command+(target?' '+target:'');try{await navigator.clipboard.writeText(message);notice.textContent='Команда скопирована: '+message+'. Сумма: '+total+' '+command.currency;}catch{notice.textContent='Сообщение: '+message+'. Сумма: '+total+' '+command.currency;}};card.append(heading,price,description,detail,button);if(command.enabled&&config.donationUrl){const url=new URL(config.donationUrl);if(url.protocol==='https:'&&['www.donationalerts.com','donationalerts.com'].includes(url.hostname)){const link=document.createElement('a');link.textContent='Открыть донат';link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';link.style.marginTop='10px';card.append(link)}}cards.append(card)}}catch{notice.textContent='Не удалось загрузить команды. Обновите страницу перед отправкой доната.';cards.replaceChildren()}}
-load();setInterval(load,60000);
-</script></html>
+const cards = document.querySelector('#cards');
+const notice = document.querySelector('#notice');
+const times = document.querySelector('#times');
+const target = document.querySelector('#target');
+let currentConfig = '';
+let cardViews = [];
+const format = value => new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 8}).format(value);
+const count = () => Math.max(1, Math.min(3, Number(times.value) || 1));
 
+function donationLink(value) {
+    try {
+        const url = new URL(value);
+        return url.protocol === 'https:' && ['www.donationalerts.com', 'donationalerts.com'].includes(url.hostname) && !url.username && !url.password ? url.href : null;
+    } catch { return null; }
+}
 
+function description(command, applications) {
+    const factor = Number(command.factor) || 1;
+    const quantity = Math.floor(10 * factor) * applications;
+    const colors = {color_green: 'зелёный', color_pink: 'розовый', color_blue: 'синий', color_orange: 'оранжевый', color_purple: 'фиолетовый', color_black: 'чёрный', color_brown: 'коричневый'};
+    if (colors[command.id]) return 'Навсегда красит мышь в ' + colors[command.id] + ' цвет. Повторная команда заменяет цвет. Окрашивается одна мышь.';
+    switch (command.id) {
+        case 'scale': return 'Размер и грузоподъёмность мыши ×' + format(factor) + '.';
+        case 'shrink': return 'Размер, скорость передвижения и грузоподъёмность мыши ×' + format(factor) + '.';
+        case 'spawn': return 'Новые жители у главного дока: ' + applications + '.';
+        case 'rename': return 'Мышь получит имя зрителя. С указанной целью имя меняется один раз; без цели — до ' + applications + ' разных мышей.';
+        case 'resources': return 'Три случайных разных ресурса: по ' + quantity + ' единиц каждого в запасы у главного дока.';
+        case 'foodloss': return 'Хомяк-вор заберёт до ' + quantity + ' единиц хлеба из запасов.';
+        case 'hat': return 'Соломенная шляпа для мыши. Размер шляпы ×' + format(factor) + '.';
+        case 'color': return 'Навсегда красит мышь в ' + ['зелёный', 'розовый', 'синий', 'оранжевый', 'фиолетовый', 'чёрный', 'коричневый'][Math.max(0, Math.min(6, Math.floor(factor) - 1))] + ' цвет. Повторная команда заменяет цвет. Окрашивается одна мышь.';
+        default: return command.id.startsWith('resource_') ? command.title + ': ' + quantity + ' единиц в запасы у главного дока.' : command.reason || command.title || '';
+    }
+}
 
+function updateTotals() {
+    for (const view of cardViews) {
+        const command = view.command;
+        view.price.textContent = format(Number(command.amount) * count()) + ' ' + (command.currency === 'RUB' ? '₽' : command.currency);
+        view.description.textContent = description(command, count());
+        view.detail.textContent = 'За одно применение: ' + format(command.amount) + ' ' + command.currency + (command.duration > 0 ? ' · Длительность: ' + format(command.duration * count()) + ' реальных секунд' : '');
+    }
+}
+
+function createCard(command, url) {
+    const card = document.createElement('section');
+    card.className = 'card';
+    card.innerHTML = '<div class="card-head"><h2></h2><div class="price"></div></div><p class="description"></p><p class="detail"></p><div class="actions"><div class="copy-wrap"><span class="tooltip" hidden>Скопировано</span><button type="button">Скопировать команду</button></div></div>';
+    card.querySelector('h2').textContent = command.command;
+    const button = card.querySelector('button');
+    const tooltip = card.querySelector('.tooltip');
+    let tooltipTimer;
+    button.setAttribute('aria-label', 'Скопировать команду ' + command.command);
+    button.addEventListener('click', async () => {
+        const message = command.command + (target.value.trim() ? ' ' + target.value.trim() : '');
+        try {
+            await navigator.clipboard.writeText(message);
+            clearTimeout(tooltipTimer);
+            tooltip.hidden = false;
+            const status = document.querySelector('#copy-status');
+            status.textContent = '';
+            requestAnimationFrame(() => { status.textContent = 'Скопировано: ' + message; });
+            tooltipTimer = setTimeout(() => { tooltip.hidden = true; }, 2000);
+            notice.textContent = '';
+        } catch {
+            tooltip.hidden = true;
+            notice.textContent = 'Не удалось скопировать. Скопируй вручную: ' + message;
+        }
+    });
+    if (url) {
+        const link = document.createElement('a');
+        link.className = 'donate';
+        link.textContent = 'Открыть Donation Alerts ↗';
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        card.querySelector('.actions').append(link);
+    }
+    cardViews.push({command, price: card.querySelector('.price'), description: card.querySelector('.description'), detail: card.querySelector('.detail')});
+    return card;
+}
+
+async function load() {
+    try {
+        const response = await fetch('./commands.json', {cache: 'no-store'});
+        if (!response.ok) throw Error();
+        const config = await response.json();
+        if (!Array.isArray(config.commands)) throw Error();
+        const signature = JSON.stringify(config);
+        if (signature === currentConfig) return;
+        const commands = config.commands.filter(command => command.enabled === true);
+        cardViews = [];
+        cards.replaceChildren(...commands.map(command => createCard(command, donationLink(config.donationUrl))));
+        notice.textContent = commands.length ? '' : 'Сейчас нет доступных команд.';
+        currentConfig = signature;
+        updateTotals();
+    } catch {
+        notice.textContent = 'Не удалось загрузить команды. Обнови страницу перед отправкой доната.';
+        cards.replaceChildren();
+        cardViews = [];
+        currentConfig = '';
+    }
+}
+times.addEventListener('change', updateTotals);
+load();
+setInterval(load, 60000);
+</script>
+</body></html>
 
