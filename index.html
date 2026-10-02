@@ -70,7 +70,8 @@ function description(command, applications) {
 function updateTotals() {
     for (const view of cardViews) {
         const command = view.command;
-        view.price.textContent = format(Number(command.amount) * count()) + ' ' + (command.currency === 'RUB' ? '₽' : command.currency);
+        const applications = command.id === 'color' || command.id.startsWith('color_') ? 1 : count();
+        view.price.textContent = format(Number(command.amount) * applications) + ' ' + (command.currency === 'RUB' ? '₽' : command.currency);
         view.description.textContent = description(command, count());
         view.detail.textContent = 'За одно применение: ' + format(command.amount) + ' ' + command.currency + (command.duration > 0 ? ' · Длительность: ' + format(command.duration * count()) + ' реальных секунд' : '');
     }
