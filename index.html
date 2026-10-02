@@ -6,17 +6,17 @@
 <title>Команды для стрима</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f3f5f9;color:#172033;font:15px 'Segoe UI',sans-serif}
-main{max-width:1120px;margin:auto;padding:40px 24px}h1{font-size:30px;letter-spacing:-.03em;margin:0 0 12px}p{color:#596579;line-height:1.6}
-.settings{display:flex;flex-wrap:wrap;gap:20px;padding:22px;background:white;border:1px solid #e0e5ed;border-radius:14px;margin-top:24px}
+main{max-width:1180px;margin:auto;padding:28px 24px}h1{font-size:28px;letter-spacing:-.03em;margin:0 0 10px}p{color:#596579;line-height:1.5}
+.settings{display:flex;flex-wrap:wrap;gap:16px;padding:16px;background:white;border:1px solid #e0e5ed;border-radius:10px;margin-top:18px}
 label{display:flex;min-width:0;max-width:100%;flex-direction:column;gap:8px;font-weight:600}input,select{background:#fff;color:inherit;border:1px solid #cbd3df;padding:10px 12px;border-radius:8px;font:inherit}input{width:min(300px,100%)}select{min-width:110px}
-.help{font-size:13px}code{background:#e8edf5;color:#33415b;padding:3px 5px;border-radius:4px}#cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,450px),1fr));gap:18px;margin:24px 0}
-.card{display:flex;flex-direction:column;border:1px solid #e0e5ed;border-radius:14px;padding:24px;background:#fff;box-shadow:0 2px 5px #17203304}
-.effect-kind{align-self:flex-start;font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px;margin:0 0 14px;color:#17603c;background:#e9f6ed}.negative .effect-kind{color:#9b3415;background:#fff0e8}.card.positive{border-top:3px solid #218449}.card.negative{border-top:3px solid #c44c25}
-.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}h2{font-size:23px;margin:0;color:#155de9;overflow-wrap:anywhere}.price{font-size:24px;font-weight:650;white-space:nowrap}.detail{font-size:13px;margin-top:0}.description{flex:1}
-.actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px}.copy-wrap{position:relative}button,a{font:600 13px 'Segoe UI',sans-serif;border-radius:8px;cursor:pointer;text-decoration:none}button{border:1px solid #155de9;background:#155de9;color:#fff;padding:11px 13px}button:hover{background:#104cc3}.donate{color:#155de9;padding:10px 0}a:hover{text-decoration:underline}:focus-visible{outline:3px solid #83afff;outline-offset:3px}
+.help{font-size:13px}code{background:#e8edf5;color:#33415b;padding:3px 5px;border-radius:4px}#cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+.card{display:flex;flex-direction:column;min-width:0;border:1px solid #e0e5ed;border-radius:10px;padding:16px;background:#fff;box-shadow:0 2px 5px #17203304}
+.positive h2{color:#19734c}.negative h2{color:#b04814}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}h2{font-size:20px;margin:0;overflow-wrap:anywhere}.price{font-size:20px;font-weight:650;white-space:nowrap}.detail{font-size:11px;margin:0}.description{flex:1;font-size:13px;margin:10px 0}
+.actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:12px}.copy-wrap{position:relative}button,a{font:600 11.5px 'Segoe UI',sans-serif;border-radius:6px;cursor:pointer;text-decoration:none}button{border:1px solid #155de9;background:#155de9;color:#fff;padding:8px 10px}button:hover{background:#104cc3}.donate{color:#155de9;padding:8px 0}a:hover{text-decoration:underline}:focus-visible{outline:3px solid #83afff;outline-offset:3px}
 .tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#253248;color:#fff;font-size:12px;padding:6px 9px;border-radius:6px;white-space:nowrap;pointer-events:none}.tooltip[hidden]{display:none}
 #notice{color:#354967;font-size:14px;overflow-wrap:anywhere}footer{font-size:12px;color:#6b7689;line-height:1.6}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-@media(max-width:520px){main{padding:28px 16px}.card{padding:20px}.settings{padding:18px}h1{font-size:26px}}
+@media(max-width:1050px){#cards{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:640px){main{padding:22px 14px}#cards{grid-template-columns:minmax(0,1fr)}.settings{padding:14px}h1{font-size:25px}}
 </style>
 </head>
 <body><main>
@@ -28,6 +28,7 @@ label{display:flex;min-width:0;max-width:100%;flex-direction:column;gap:8px;font
 </div>
 <p class="help" id="target-help">Для имени с пробелами: <code>@"Имя мыши"</code>. Без цели — привязанная зрителю или случайная мышь. Команды для всего острова не требуют цели.</p>
 <p class="help">После команды и цели можно добавить своё сообщение через пробел: <code>!кабан #3 Привет стример!</code>. Цель <code>#ID</code> или <code>@Имя</code> укажи сразу после команды, перед личным текстом.</p>
+<p class="help">Переименование: <code>!крещение #6</code> даст мыши №6 имя из поля «Имя» донатера в DonationAlerts. <code>@Имя</code> выбирает мышь по её текущему имени. Личный текст сообщения не задаёт новое имя.</p>
 <p class="help">До 3 применений за донат: цена умножается на выбранное число. Остаток суммы не даёт дополнительного применения. Временные эффекты объединяются по длительности. Все таймеры идут в реальных секундах: скорость игры и пауза не меняют отсчёт.</p>
 <div id="notice" role="status" aria-live="polite"></div>
 <div id="copy-status" class="sr-only" role="status" aria-live="polite"></div>
@@ -64,10 +65,10 @@ function description(command, applications) {
         case 'scale': return 'Размер и грузоподъёмность мыши ×' + format(factor) + '.';
         case 'shrink': return 'Размер, скорость передвижения и грузоподъёмность мыши ×' + format(factor) + '.';
         case 'spawn': return 'Новые жители у главного дока: ' + applications + '.';
-        case 'rename': return 'Мышь получит имя зрителя. С указанной целью имя меняется один раз; без цели — до ' + applications + ' разных мышей.';
+        case 'rename': return 'Мышь получит имя из поля «Имя» донатера в DonationAlerts. С целью — одна мышь; без цели — ' + (applications === 1 ? 'одна случайная или привязанная мышь.' : 'до ' + applications + ' разных мышей.');
         case 'resources': return 'Три случайных разных ресурса: по ' + quantity + ' единиц каждого в запасы у главного дока.';
         case 'foodloss': return 'Из запасов пропадут три случайных разных ресурса, которые есть в наличии: до ' + quantity + ' единиц каждого. Если видов меньше трёх, пропадут доступные.';
-        case 'hat': return 'Соломенная шляпа для мыши. Размер шляпы ×' + format(factor) + '.';
+        case 'hat': return 'Соломенная шляпа навсегда для одной мыши. Размер шляпы ×' + format(factor) + '. Переплата не добавляет применений.';
         case 'color': return 'Навсегда красит мышь в ' + ['зелёный', 'розовый', 'синий', 'оранжевый', 'фиолетовый', 'чёрный', 'коричневый'][Math.max(0, Math.min(6, Math.floor(factor) - 1))] + ' цвет. Повторная команда заменяет цвет. Окрашивается одна мышь.';
         default: return command.id.startsWith('resource_loss_') ? command.title + ': из запасов пропадёт до ' + quantity + ' единиц. Запас не уйдёт ниже нуля.' : command.id.startsWith('resource_') ? command.title + ': ' + quantity + ' единиц в запасы у главного дока.' : command.reason || command.title || '';
     }
@@ -76,10 +77,11 @@ function description(command, applications) {
 function updateTotals() {
     for (const view of cardViews) {
         const command = view.command;
-        const applications = command.id === 'color' || command.id.startsWith('color_') ? 1 : count();
+        const permanent = command.id === 'hat' || command.id === 'color' || command.id.startsWith('color_');
+        const applications = permanent ? 1 : count();
         view.price.textContent = format(Number(command.amount) * applications) + ' ' + (command.currency === 'RUB' ? '₽' : command.currency);
         view.description.textContent = description(command, count());
-        view.detail.textContent = 'За одно применение: ' + format(command.amount) + ' ' + command.currency + (command.duration > 0 ? ' · Длительность: ' + format(command.duration * count()) + ' реальных секунд' : '');
+        view.detail.textContent = 'За одно применение: ' + format(command.amount) + ' ' + command.currency + (!permanent && command.duration > 0 ? ' · Длительность: ' + format(command.duration * applications) + ' реальных секунд' : '');
     }
 }
 
@@ -87,9 +89,9 @@ function createCard(command, url) {
     const card = document.createElement('section');
     const negative = ['shrink', 'foodloss', 'remove'].includes(command.id) || command.id.startsWith('resource_loss_');
     card.className = 'card ' + (negative ? 'negative' : 'positive');
-    card.innerHTML = '<span class="effect-kind"></span><div class="card-head"><h2></h2><div class="price"></div></div><p class="description"></p><p class="detail"></p><div class="actions"><div class="copy-wrap"><span class="tooltip" hidden>Скопировано</span><button type="button">Скопировать команду</button></div></div>';
-    card.querySelector('.effect-kind').textContent = negative ? '− Отрицательный эффект' : '+ Положительный эффект';
+    card.innerHTML = '<div class="card-head"><h2></h2><div class="price"></div></div><p class="description"></p><p class="detail"></p><div class="actions"><div class="copy-wrap"><span class="tooltip" hidden>Скопировано</span><button type="button">Копировать</button></div></div>';
     card.querySelector('h2').textContent = command.command;
+    card.querySelector('h2').setAttribute('aria-label', command.command + (negative ? ' — отрицательный эффект' : ' — положительный эффект'));
     const button = card.querySelector('button');
     const tooltip = card.querySelector('.tooltip');
     let tooltipTimer;
