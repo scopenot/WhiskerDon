@@ -64,6 +64,7 @@ function description(command, applications) {
     switch (command.id) {
         case 'scale': return 'Размер и грузоподъёмность мыши ×' + format(factor) + '.';
         case 'shrink': return 'Размер, скорость передвижения и грузоподъёмность мыши ×' + format(factor) + '.';
+        case 'slowpokes': return 'Случайные ' + format(command.populationPercent || 30) + '% мышей замедлятся: скорость передвижения ×' + format(factor) + '. Переплата увеличивает длительность, а не охват. Цель указывать не нужно.';
         case 'spawn': return 'Новые жители у главного дока: ' + applications + '.';
         case 'rename': return 'Мышь получит имя из поля «Имя» донатера в DonationAlerts. С целью — одна мышь; без цели — ' + (applications === 1 ? 'одна случайная или привязанная мышь.' : 'до ' + applications + ' разных мышей.');
         case 'resources': return 'Три случайных разных ресурса: по ' + quantity + ' единиц каждого в запасы у главного дока.';
@@ -87,7 +88,7 @@ function updateTotals() {
 
 function createCard(command, url) {
     const card = document.createElement('section');
-    const negative = ['shrink', 'foodloss', 'remove'].includes(command.id) || command.id.startsWith('resource_loss_');
+    const negative = command.negative === true || ['shrink', 'slowpokes', 'foodloss', 'remove'].includes(command.id) || command.id.startsWith('resource_loss_');
     card.className = 'card ' + (negative ? 'negative' : 'positive');
     card.innerHTML = '<div class="card-head"><h2></h2><div class="price"></div></div><p class="description"></p><p class="detail"></p><div class="actions"><div class="copy-wrap"><span class="tooltip" hidden>Скопировано</span><button type="button">Копировать</button></div></div>';
     card.querySelector('h2').textContent = command.command;
@@ -97,7 +98,7 @@ function createCard(command, url) {
     let tooltipTimer;
     button.setAttribute('aria-label', 'Скопировать команду ' + command.command);
     button.addEventListener('click', async () => {
-        const message = command.command + (target.value.trim() ? ' ' + target.value.trim() : '');
+        const message = command.command + (command.id !== 'slowpokes' && target.value.trim() ? ' ' + target.value.trim() : '');
         try {
             await navigator.clipboard.writeText(message);
             clearTimeout(tooltipTimer);
