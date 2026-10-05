@@ -59,7 +59,7 @@ function donationLink(value) {
 function description(command, applications) {
     const factor = Number(command.factor) || 1;
     const quantity = Math.floor(10 * factor) * applications;
-    const colors = {color_green: 'зелёный', color_pink: 'розовый', color_blue: 'синий', color_orange: 'оранжевый', color_purple: 'фиолетовый', color_black: 'чёрный', color_brown: 'коричневый'};
+    const colors = {color_green: 'зелёный', color_pink: 'розовый', color_blue: 'синий', color_orange: 'оранжевый', color_red: 'красный', color_black: 'чёрный', color_brown: 'коричневый'};
     if (colors[command.id]) return 'Навсегда красит мышь в ' + colors[command.id] + ' цвет. Повторная команда заменяет цвет. Окрашивается одна мышь.';
     switch (command.id) {
         case 'scale': return 'Размер и грузоподъёмность мыши ×' + format(factor) + '.';
@@ -70,7 +70,7 @@ function description(command, applications) {
         case 'resources': return 'Три случайных разных ресурса: по ' + quantity + ' единиц каждого в запасы у главного дока.';
         case 'foodloss': return 'Из запасов пропадут три случайных разных ресурса, которые есть в наличии: до ' + quantity + ' единиц каждого. Если видов меньше трёх, пропадут доступные.';
         case 'hat': return 'Соломенная шляпа навсегда для одной мыши. Размер шляпы ×' + format(factor) + '. Переплата не добавляет применений.';
-        case 'color': return 'Навсегда красит мышь в ' + ['зелёный', 'розовый', 'синий', 'оранжевый', 'фиолетовый', 'чёрный', 'коричневый'][Math.max(0, Math.min(6, Math.floor(factor) - 1))] + ' цвет. Повторная команда заменяет цвет. Окрашивается одна мышь.';
+        case 'color': return 'Навсегда красит мышь в ' + ['зелёный', 'розовый', 'синий', 'оранжевый', 'красный', 'чёрный', 'коричневый'][Math.max(0, Math.min(6, Math.floor(factor) - 1))] + ' цвет. Повторная команда заменяет цвет. Окрашивается одна мышь.';
         default: return command.id.startsWith('resource_loss_') ? command.title + ': из запасов пропадёт до ' + quantity + ' единиц. Запас не уйдёт ниже нуля.' : command.id.startsWith('resource_') ? command.title + ': ' + quantity + ' единиц в запасы у главного дока.' : command.reason || command.title || '';
     }
 }
@@ -86,6 +86,13 @@ function updateTotals() {
     }
 }
 
+function copyMessage(command, targetValue) {
+    const personal = typeof command.supportsTarget === 'boolean' ? command.supportsTarget :
+        ['rename', 'scale', 'shrink', 'death', 'heal', 'hat', 'color'].includes(command.id) || command.id.startsWith('color_');
+    const recipient = targetValue.trim();
+    return command.command + (personal && recipient ? ' ' + recipient : '');
+}
+
 function createCard(command, url) {
     const card = document.createElement('section');
     const negative = command.negative === true || ['shrink', 'slowpokes', 'foodloss', 'remove'].includes(command.id) || command.id.startsWith('resource_loss_');
@@ -98,7 +105,7 @@ function createCard(command, url) {
     let tooltipTimer;
     button.setAttribute('aria-label', 'Скопировать команду ' + command.command);
     button.addEventListener('click', async () => {
-        const message = command.command + (command.id !== 'slowpokes' && target.value.trim() ? ' ' + target.value.trim() : '');
+        const message = copyMessage(command, target.value);
         try {
             await navigator.clipboard.writeText(message);
             clearTimeout(tooltipTimer);
